@@ -8,6 +8,6 @@ server {
     }
 
     location / {
-        rewrite ^ https://{{ production_domain }}$request_uri? permanent;
+        rewrite ^ https://{{ sc2pte_production_domain }}$request_uri? permanent;
     }
 }

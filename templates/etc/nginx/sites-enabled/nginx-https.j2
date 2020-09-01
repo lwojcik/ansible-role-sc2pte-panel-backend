@@ -9,12 +9,12 @@ add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsaf
 server {
     listen 443 ssl;
     listen [::]:443 ssl;
-    server_name {{ production_domain }};
+    server_name {{ sc2pte_production_domain }};
 
     ssl on;
-    ssl_certificate         /etc/letsencrypt/live/{{ production_domain }}/fullchain.pem;
-    ssl_certificate_key     /etc/letsencrypt/live/{{ production_domain }}/privkey.pem;
-    ssl_trusted_certificate /etc/letsencrypt/live/{{ production_domain }}/fullchain.pem;
+    ssl_certificate         /etc/letsencrypt/live/{{ sc2pte_production_domain }}/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/{{ sc2pte_production_domain }}/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/{{ sc2pte_production_domain }}/fullchain.pem;
 
     ssl_session_cache shared:SSL:50m;
     ssl_session_timeout 5m;
