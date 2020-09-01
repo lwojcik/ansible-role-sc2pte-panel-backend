@@ -10,8 +10,8 @@ It builds the app from Git repository and generates backup of the previous deplo
 
 | Variable name | Sample value | Description |
 |-  |-  |-
-| `deploy_directory` | `/home/deploy/sc2-api-service` | Directory used to deploy project |
-| `backup_directory` | `/home/deploy/backups/sc2-api-service` | Directory used to generate backups of previous deployments as tgz files |
-| `production_domain` | `some.domain.tld` | Production domain used by the app |
+| `sc2pte_deploy_directory` | `/home/deploy/sc2-api-service` | Directory used to deploy project |
+| `sc2pte_backup_directory` | `/home/deploy/backups/sc2-api-service` | Directory used to generate backups of previous deployments as tgz files |
+| `sc2pte_production_domain` | `some.domain.tld` | Production domain used by the app |
 
 For project-specific environment variables, see [tasks/install.yml](https://github.com/sc2pte/ansible-role-sc2pte-backend/blob/master/tasks/install.yml#L26).

@@ -2,34 +2,34 @@
 - name: Clone / update the repository
   git:
     repo: 'https://github.com/sc2pte/backend.git'
-    dest: '{{ deploy_directory }}'
+    dest: '{{ sc2pte_deploy_directory }}'
     depth: 1
     force: yes
-  register: git_clone
+  register: sc2pte_git_clone
 
 - name: Check if previous deployment exists
   stat:
-    path: "{{ deploy_directory }}"
-  register: previous_deployment
-  when: git_clone.changed
+    path: "{{ sc2pte_deploy_directory }}"
+  register: sc2pte_previous_deployment
+  when: sc2pte_git_clone.changed
 
 - name: Ensure backup directory exists
   file:
-    path: "{{ backup_directory }}"
+    path: "{{ sc2pte_backup_directory }}"
     state: directory
-  when: git_clone.changed
+  when: sc2pte_git_clone.changed
 
 - name: Backup previous deployment
   archive:
-    path: "{{ deploy_directory }}"
-    dest: "{{ backup_directory }}/{{ lookup('pipe','date +%Y-%m-%d_%H-%M-%S') }}.tgz"
+    path: "{{ sc2pte_deploy_directory }}"
+    dest: "{{ sc2pte_backup_directory }}/{{ lookup('pipe','date +%Y-%m-%d_%H-%M-%S') }}.tgz"
   changed_when: false
-  when: git_clone.changed and previous_deployment.stat.exists
+  when: sc2pte_git_clone.changed and sc2pte_previous_deployment.stat.exists
 
 - name: Stop running project instance in pm2
-  command: 'pm2 stop {{ pm2_project_name }}'
+  command: 'pm2 stop {{ sc2pte_pm2_project_name }}'
   failed_when: false
-  when: git_clone.changed
+  when: sc2pte_git_clone.changed
 
 - name: Set environment variables
   lineinfile:
@@ -82,32 +82,32 @@
       value: "{{ SC2PTE_MAXIMUM_PROFILE_COUNT }}"
   notify: Reload environment variables
   become: true
-  when: git_clone.changed
+  when: sc2pte_git_clone.changed
 
 - name: Remove node_modules directory
   file:
-    path: '{{ deploy_directory }}/node_modules'
+    path: '{{ sc2pte_deploy_directory }}/node_modules'
     state: absent
-  when: git_clone.changed
+  when: sc2pte_git_clone.changed
 
 - name: Install packages
   npm:
-    path: '{{ deploy_directory }}'
-  when: git_clone.changed
+    path: '{{ sc2pte_deploy_directory }}'
+  when: sc2pte_git_clone.changed
 
 - name: Build project
-  command: 'npm run build --prefix {{ deploy_directory }}'
-  when: git_clone.changed
+  command: 'npm run build --prefix {{ sc2pte_deploy_directory }}'
+  when: sc2pte_git_clone.changed
 
 - name: Delete running project instance from pm2
-  command: 'pm2 delete {{ pm2_project_name }}'
+  command: 'pm2 delete {{ sc2pte_pm2_project_name }}'
   failed_when: false
 
 - name: Start project in pm2
-  command: 'pm2 start {{ deploy_directory }}/scripts/start.js -i max --name {{ pm2_project_name }} --watch --update-env -f'
-  when: git_clone.changed
+  command: 'pm2 start {{ sc2pte_deploy_directory }}/scripts/start.js -i max --name {{ sc2pte_pm2_project_name }} --watch --update-env -f'
+  when: sc2pte_git_clone.changed
 
 - name: Setup configuration as startup script
   command: 'env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u lwoo --hp /home/lwoo'
   become: true
-  when: git_clone.changed
+  when: sc2pte_git_clone.changed

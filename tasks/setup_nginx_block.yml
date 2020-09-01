@@ -2,8 +2,8 @@
 - name: Add domain to etc/hosts
   lineinfile:
     dest: /etc/hosts
-    regexp: '^127.0.0.1 {{ production_domain }}$'
-    line: "127.0.0.1\t{{ production_domain }}"
+    regexp: '^127.0.0.1 {{ sc2pte_production_domain }}$'
+    line: "127.0.0.1\t{{ sc2pte_production_domain }}"
   become: true
 
 - name: Install nginx block for default site to pass cert generation
@@ -19,9 +19,9 @@
   become: true
 
 - name: Create letsencrypt certificate
-  shell: letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ production_domain }}
+  shell: letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ sc2pte_letsencrypt_email }} --agree-tos -d {{ production_domain }}
   args:
-    creates: /etc/letsencrypt/live/{{ production_domain }}
+    creates: /etc/letsencrypt/live/{{ sc2pte_production_domain }}
   become: true
 
 - name: Generate dhparams
@@ -32,7 +32,7 @@
 - name: Install nginx block for HTTPS site
   template:
     src: etc/nginx/sites-enabled/nginx-https.j2
-    dest: /etc/nginx/sites-enabled/{{ production_domain }}-https
+    dest: /etc/nginx/sites-enabled/{{ sc2pte_production_domain }}-https
   become: true
 
 - name: Reload nginx to activate site
@@ -45,5 +45,5 @@
   cron:
     name: letsencrypt_renewal
     special_time: weekly
-    job: letsencrypt --renew certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ production_domain }} && service nginx reload
+    job: letsencrypt --renew certonly -n --webroot -w /var/www/letsencrypt -m {{ sc2pte_letsencrypt_email }} --agree-tos -d {{ sc2pte_production_domain }} && service nginx reload
   become: true
