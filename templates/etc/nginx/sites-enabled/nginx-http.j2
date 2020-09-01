@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name {{ production_domain }};
+    server_name {{ sc2pte_production_domain }};
 
     location /.well-known/acme-challenge {
         root /var/www/letsencrypt;
