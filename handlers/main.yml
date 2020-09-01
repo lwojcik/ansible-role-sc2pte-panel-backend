@@ -1,0 +1,3 @@
+---
+- name: Reload environment variables
+  command: source /etc/environment
