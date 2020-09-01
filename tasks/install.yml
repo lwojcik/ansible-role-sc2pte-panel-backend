@@ -102,6 +102,7 @@
 - name: Delete running project instance from pm2
   command: 'pm2 delete {{ sc2pte_pm2_project_name }}'
   failed_when: false
+  when: sc2pte_git_clone.changed
 
 - name: Start project in pm2
   command: 'pm2 start {{ sc2pte_deploy_directory }}/scripts/start.js -i max --name {{ sc2pte_pm2_project_name }} --watch --update-env -f'

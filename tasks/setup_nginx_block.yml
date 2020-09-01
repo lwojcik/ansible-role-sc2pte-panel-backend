@@ -9,7 +9,7 @@
 - name: Install nginx block for default site to pass cert generation
   template:
     src: etc/nginx/sites-enabled/nginx-http.j2
-    dest: /etc/nginx/sites-enabled/{{ production_domain }}-http
+    dest: /etc/nginx/sites-enabled/{{ sc2pte_production_domain }}-http
   become: true
 
 - name: Reload nginx to activate sites
@@ -19,7 +19,7 @@
   become: true
 
 - name: Create letsencrypt certificate
-  shell: letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ sc2pte_letsencrypt_email }} --agree-tos -d {{ production_domain }}
+  shell: letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ sc2pte_letsencrypt_email }} --agree-tos -d {{ sc2pte_production_domain }}
   args:
     creates: /etc/letsencrypt/live/{{ sc2pte_production_domain }}
   become: true
