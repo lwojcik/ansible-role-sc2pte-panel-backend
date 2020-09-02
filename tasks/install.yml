@@ -80,7 +80,6 @@
       value: "{{ SC2PTE_ENABLE_TWITCH_EXT_ONAUTHORIZED }}"
     - name: "SC2PTE_MAXIMUM_PROFILE_COUNT"
       value: "{{ SC2PTE_MAXIMUM_PROFILE_COUNT }}"
-  notify: Reload environment variables
   become: true
   when: force_deploy or sc2pte_git_clone.changed
 
