@@ -103,6 +103,10 @@
   failed_when: false
   when: force_deploy is defined and force_deploy == True or sc2pte_git_clone.changed
 
+- name: Flush Redis cache
+  command: "redis-cli -a {{ SC2PTE_REDIS_PASSWORD }} {{ sc2pte_redis_flush_command }}"
+  when: flush_redis_cache is defined and flush_redis_cache == True
+
 - name: Start project in pm2
   command: 'pm2 start {{ sc2pte_deploy_directory }}/scripts/start.js -i max --name {{ sc2pte_pm2_project_name }} --watch --update-env -f'
   when: force_deploy is defined and force_deploy == True or sc2pte_git_clone.changed
