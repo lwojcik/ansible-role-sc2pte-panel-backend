@@ -1,7 +1,7 @@
 ---
 - name: Clone / update the repository
   git:
-    repo: 'https://github.com/sc2pte/backend.git'
+    repo: 'https://github.com/sc2pte/panel-backend.git'
     dest: '{{ sc2pte_deploy_directory }}'
     depth: 1
     force: yes
